@@ -1,0 +1,164 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+%\addbibresource{references.bib}
+\usepackage{multicol}
+%\usepackage[bookmarks=true]{hyperref}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{epigraph}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage[binary-units=true]{siunitx}
+\usepackage{subcaption}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{cuted}
+\usepackage{etoolbox}
+\usepackage{balance}
+\usepackage{multirow}
+
+\usepackage{wrapfig}
+
+\newcommand\mypara[1]{\vspace{3pt}\noindent\textbf{#1.}}
+\newcommand{\propose}[1]{\textcolor{blue}{#1}}
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+% tex2plot
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+%% the following commands are needed for some matlab2tikz features
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{babel}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{grffile}
+\usepackage{amsmath}
+\usepackage{interval}
+
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{dateplot}
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+
+% Learning vision based locomotion by walking blind
+% Learning too see by walking blind
+% Learning Vision for Walking
+% Self supervised visual learning for locomotion
+% Self supervised learning of vision for walking
+% learning vision for walking from proprioception
+% Learning Vision from proprioception for walking
+
+
+\title{\LARGE \bf
+% Rapidly Adapting Quadcopter Controllers:\\ One Policy to Fly Them All
+% Scaling Up Adaptation for Quadcopters
+% Universal Quadcopter Controllers:\\A Learning Approach for Zero-shot Adaptive Quadcopter Control
+A Zero-Shot Adaptive Quadcopter Controller
+% An adaptive controller for quadcopters capable of compensating for extreme parameter variations
+}
+
+\author{Dingqi Zhang$^1$, Antonio Loquercio$^2$, Xiangyu Wu$^1$, Ashish Kumar$^2$, Jitendra Malik$^2$, Mark W. Mueller$^1$% <-this % stops a space
+%\thanks{*This work was not supported by any organization}% <-this % stops a space
+\thanks{The authors are with the $^1$High Performance Robotics Lab, Dept. of Mechanical Engineering, and the $^2$Dept. of Electrical Engineering and Computer Science, University of California Berkeley, \{dingqi, loquercio, wuxiangyu, ashish\_kumar, malik, mwm\}@berkeley.edu} 
+% \thanks{$^{2}$Bernard D. Researcheris with the Department of Electrical Engineering, Wright State University,
+%         Dayton, OH 45435, USA
+%         {\tt\small b.d.researcher@ieee.org}}%
+}
+
+
+\begin{document}
+
+
+\maketitle
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+This paper proposes a universal adaptive controller for quadcopters, which can be deployed zero-shot to quadcopters of very different mass, arm lengths and motor constants, and also shows rapid adaptation to unknown disturbances during runtime. The core algorithmic idea is to learn a single policy that can adapt online \emph{at test time} not only to the disturbances applied to the drone, but also to the robot dynamics and hardware in the same framework.
+We achieve this by training a neural network to estimate a latent representation of the robot and environment parameters, which is used to condition the behaviour of the controller, also represented as a neural network. We train both networks exclusively in simulation with the goal of flying the quadcopters to goal positions and avoiding crashes to the ground. We directly deploy the same controller trained in the simulation without any modifications on two quadcopters with differences in mass, inertia, and maximum motor speed of up to 4 times. In addition, we show rapid adaptation to sudden and large disturbances (up to 35.7\%) in the mass and inertia of the quadcopters. We perform an extensive evaluation in both simulation and the physical world, where we outperform a state-of-the-art learning-based adaptive controller and a traditional PID controller specifically tuned to each platform individually. Video results can be found at~\url{https://youtu.be/3yQrDML5aWs}. %We will release our code and trained model upon acceptance.
+
+\end{abstract}
+
+% \makeatletter
+% \g@addto@macro\@maketitle{
+% \centering
+
+
+
+
+% \vspace{-0.1in}
+% \bigskip}
+% \makeatother
+% \textcolor{red}{We never use the second person ("you") in a paper. A paper isn't addressed at anyone, it is simply a report.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{sections/intro}
+\input{sections/related_work}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/conclusions}
+\input{sections/acknowledgement}
+
+
+
+%===============================================================================
+
+% The maximum paper length is 8 pages excluding references and acknowledgements, and 10 pages including references and acknowledgements
+
+%\clearpage
+% The acknowledgments are automatically included only in the final and preprint versions of the paper.
+% \acknowledgments{}
+
+%===============================================================================
+
+% no \bibliographystyle is required, since the corl style is automatically used.
+% \bibliography{references.bib}  % .bib
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+
+
+\end{document}

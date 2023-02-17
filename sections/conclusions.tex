@@ -1,0 +1,22 @@
+\section{Conclusion}
+In this work, we show how a single policy can control quadcopters of totally different morphology, mass, and actuation. 
+%
+We successfully transfer a method initially developed for legged locomotion in adapting terrains to quadcopters in adapting a diverse set of quadcopter bodies and disturbances.
+%
+Without any additional tuning or modification, the single policy trained only in simulation can be deployed zero-shot to real quadcopters of very different design and hardware characteristics while showing rapid adaptation to unknown disturbances at the same time.
+%
+Adaptive control has achieved great success in adaptation to model uncertainties and disturbances, but our work offers a fresh view on the meaning of adaptation by completely bypassing the notion of a \emph{reference} model that most adaptive control methods use. 
+%
+%while additionally showing rapid adaptation to unknown payloads during deployment. It differs from classic adaptative control in that it does not compensates for disparities between observations and the referenced model.
+%
+This feature enables our method to adapt to a much wider range of robots and disturbances.
+%
+%
+% One limitation of our approach is that it relies on simulation to improve, necessitating the need to replicate and train on situations in the simulation in which it might fail to work in the real world. A more scalable lifelong solution to the problem would be to continuously learn in the real world with the data collected during deployment in the real world. 
+%
+% \propose{Future work will aim to incorporate learning with real world data into the method. }
+%
+%In addition, we noticed a trade-off between the tracking performance and the probability of crashing. In this work, we favoured safety to tracking error. 
+%and the  the policy presented in this paper is trained to take avoiding crashes at the time of adaptation as the priority out of other goals including tracking high-level commands. 
+%However, future work will aim to relax this trade-off. 
+%However, in the near future, we will have to improve the tracking performance and ensure safety.  

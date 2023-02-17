@@ -1,0 +1,140 @@
+\section{Related Work}
+\label{sec:rel_work}
+
+% \todo{move related work ahead}
+
+The design of high-performance adaptive controllers for aerospace systems has been a top priority for researchers and industry for more than 50 years.
+% \todo{This isn't true, though? quadcopters may have been invented 100 years ago, but until we had small IMUs (maybe 20 years ago) no-one was really working on them, and certainly not a `top priority'.}
+% \todo{We can maybe claim something like automatic control of aerospace systems...}
+%
+While the overall goal remained the same over the decades, approaches greatly evolved.
+%
+In the following, we review both traditional and learning-based solutions to adaptive control.
+%
+While each method has its advantages and limitations, they are mainly designed to handle model uncertainties and disturbances.
+%
+We are interested in exploring a much wider range of adaptations, with substantial differences between platforms.
+
+
+\subsection{Traditional Adaptive Control}
+
+One of the initial contributions in this space is the model reference adaptive controller (MRAC), an extension of the well-known MIT-rule~\cite{MAREELSMit}.
+%
+The empirical success of this method sparked great interest in the aerospace community, which led to the development of both practical tools and theoretical foundations~\cite{aastrom2013adaptive, lavretsky2013robust}.
+%
+From the many methods developed, one of the most popular is $\mathcal{L}1$ adaptive control~\cite{cao2008design,hovakimyan2010l1}.
+%
+The main reason behind its success is the ability to provide rapid adaptation to model uncertainties and disturbances with theoretical guarantees under (possibly restrictive) assumptions.
+%
+Its high-level working principle consists of estimating the differences between the nominal (as predicted by the reference model) and observed state transitions.
+%
+Such differences are then compensated by allocating a control authority proportional to the disturbance, effectively driving the system to its reference behaviour.
+%
+Applications of $\mathcal{L}1$ adaptive controllers span several types of aerial vehicles, from multi-rotors to fixed wings~\cite{mallikarjunan2012l1, gregory2009l1}.
+
+Mostly related to this work is the application of $\mathcal{L}1$ adaptive control to quadcopters~\cite{schreier2012modeling}.
+%
+However, the performance of the classic $\mathcal{L}1$ formulation degrades whenever the observed transitions differ greatly from the (usually linear) reference model, which can happen due to aerodynamic effects or large payloads.
+%
+Therefore, recent work has combined $\mathcal{L}1$ adaptive control with nonlinear online optimization~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
+%
+While these methods achieved impressive results, they still require explicit knowledge of (reference) system parameters, such as inertia, mass, and motor characteristics.
+%
+In addition, they generally require platform-specific tuning to get the desired behaviour. 
+%
+Other approaches to adaptive control on quadcopters include differential flatness~\cite{faessler2017differential} and nonlinear dynamic inversion~\cite{smeur2016adaptive}.
+%
+These methods have shown rapid adaptation to aerodynamic effects and model uncertainties.
+%
+However, they cannot cope with large variations in the quadcopter's dynamics, since the underlying assumptions on locally linear disturbances are generally not fulfilled.
+ 
+
+
+%the engineer typically has to spend significant energy on estimating parameters, and tuning constants, to get the desired behaviour. 
+% In quadcopters, $\mathcal{L}1$ adaptive control is generally combined with online optimization, e.g. MPC, to obtain the best performances~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
+%
+% Combining $\mathcal{L}1$ adaptive control with non-linear optimization can mitigate some of these problems and achieve impressive results in high-speed flight~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
+% %
+% However, they still require specific feature engineering and disturbances to be smaller in comparison to the quadcopter dynamics.
+% \todo{I don't understand the previous sentence -Mark}
+% \todo{There is a very abrupt jump from generic aerospace control to "quadcopter dynamics". It's also not clear what is meant by "disturbances being smaller" than "dynamics" (how do I compare them?)}
+
+% \todo{This paragraph includes one `model learning' paper, but the next section is about learning. Is this an oversight?}
+% Other approaches for adaptive control include differential flatness~\cite{faessler2017differential}, online model learning~\cite{torrente2021data}, and nonlinear dynamic inversion~\cite{smeur2016adaptive}.
+% %
+% These methods have shown rapid adaptation to aerodynamic effects and model uncertainties.
+% %
+% However, they cannot cope with large variations in the quadcopter's dynamic, since the underlying assumptions on locally linear disturbances are generally not fulfilled.
+ 
+% \begin{itemize}
+%     %\item (History) Revisiting the mit rule for adaptive control
+%     %\item Performance, Precision, and Payloads: Adaptive Nonlinear MPC for quadcopters
+%     %\item E. Lavretsky and K. A. Wise, “Robust adaptive control"
+%     %\item K. J. Astrom and B. Wittenmark, Adaptive control.
+%     %\item P. A. Ioannou and J. Sun, Robust adaptive control.
+%     %\item N. Hovakimyan and C. Cao, L1 adaptive control theory: Guaranteed robustness with fast adaptation.
+%     %\item  C. Cao and N. Hovakimyan, “Design and analysis of a novel l1 adaptive control architecture with guaranteed transient
+%     %performance,”
+%     %\item “L1 adaptive controller for attitude control of multirotors,”
+%     %\item Adaptive control of quadcopter uavs: A design trade study with flight evaluations,
+%     %\item Modeling and adaptive control of a quadcopter
+%     %\item Geometric L1 Adaptive Attitude Control for a quadcopter Unmanned Aerial Vehicle
+%     %\item "Adaptive model predictive control for high-accuracy trajectory tracking in changing conditions"
+%     %\item "L1-adaptive mppi architecture for robust and agile control of multirotors,”
+%     %\item Differential Flatness of quadcopter Dynamics Subject to Rotor Drag for Accurate Tracking of High-Speed Trajectories
+%     %\item L1 adaptive controller for multi-input multi-output systems in the presence of nonlinear unmatched uncertainties
+%     %\item Online Estimation of Geometric and Inertia Parameters for Multirotor Aerial Vehicles
+%     %\item Adaptive Incremental Nonlinear Dynamic Inversion for Attitude Control of Micro Air Vehicles | Journal of Guidance, Control, and Dynamics
+%     %\item Data-driven mpc for quadcopters
+%     %\item IMU-Based Inertia Estimation for a quadcopter Using Newton-Euler Dynamics
+%     %\item L1-RL: Robustifying Reinforcement Learning Policies with L1 Adaptive Control
+% \end{itemize}
+
+% \subsection{Robust Control}
+
+% \begin{itemize}
+%     \item “Fast direct multiple shooting algorithms for optimal robot control"
+%     \item ONLINEAR ROBUST TRACKING CONTROL OF A quadcopterUADROTOR UAV ON SE(3)
+
+% \end{itemize}
+
+\subsection{Learning-Based Adaptive Control}
+
+Recent data-driven controllers have shown promising results for quadcopter stabilization~\cite{hwangbo2017control,koch2019reinforcement}, or waypoint tracking flight~\cite{song2021autonomous, kaufmann2022benchmark}.
+%
+As their classic counterparts, learning-based controllers also allow for adaptation to disturbances and model mismatches.
+%
+One possibility to do so consists of learning a model from the data and using the model to adapt the controller~\cite{lambert2019low,shi2019neural,belkhale2021model,torrente2021data}.
+%
+However, this has the limitation that the models are difficult to carefully identify due to under-actuation of the platform and sensing noise.
+%
+This motivated model-free methods that, like ours, learn an end-to-end adaptive policy~\cite{pi2021robust}.
+%
+Meta-learning has also been proposed to augment the performance of the model-based controller for fast online adaptation to wind~\cite{neuralfly} or suspended payloads~\cite{belkhale2021model}. 
+%
+These methods achieved impressive results in disturbance rejection.
+%
+However, they are still tailored to a specific platform type, and lack an explicit mechanism for adaptation to drastic changes in the drone's model and actuation.
+%
+Our work aims to fill this gap and create a single control policy capable of flying vehicles with vastly varying physical characteristics and under large disturbances.
+%
+% However, we believe that meta-learning can complement our work on rapid adaptation by improving the policy in the real world during deployment. We will discuss this aspect in the future work and limitations section in the updated version.
+
+
+
+
+
+% \begin{itemize}
+%     %\item Model-based meta-reinforcement learning for flight with suspended payloads
+%     %\item Neural lander: Stable drone landing control using learned dynamics
+%     %\item Autonomous drone racing with deep reinforcement learning
+%     %\item Low-level control of a quadcopter with deep model-based reinforcement learning
+%     %\item Robust quadcopter control through reinforcement learning with disturbance compensation
+%     %\item Low-level autonomous control and tracking of quadcopter using reinforcement learning
+%     %\item Reinforcement Learning for UAV Attitude Control
+%     %\item Neural-Fly enables rapid learning for agile flight in strong winds
+%     %\item A Benchmark Comparison of Learned Control Policies for Agile quadcopter Flight
+    
+% \end{itemize}
+
+
