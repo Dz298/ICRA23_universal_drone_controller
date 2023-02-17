@@ -51,6 +51,21 @@ We run the optimization process for 10M steps, training on data collected over t
 
 \section{Results}
 
+\todo{I am unclear what the Thrust Err represent. Is the
+requested the Z acceleration?}
+
+\todo{Two more major changes which I believe are needed,
+more detailed investigation on unseen parameter
+performance, and more detail on the limitations of the
+work.}
+
+\todo{•	Please include standard errors in results}
+
+\todo{Paragraph breaks between the algorithms used in the
+experiment, the metrics used to compare the methods, and
+the final comparison would make the argument easier to
+read.}
+
 % \begin{figure}[t]
 %     \centering
 %     \includegraphics[width=\linewidth]{img/Disturbances_2.png}
@@ -136,6 +151,22 @@ Metrics are averaged over 5 experiments.}
 
 \subsection{Real World Deployment}
 
+\todo{While the evaluation of the author’s method is thorough,
+PID serves as a  relatively brittle real-world comparison,
+especially when more capable methods (e.g. L1) exists in
+the literature. The reviewer recognizes that comparing
+against existing approaches (L1, etc.) in the real world
+requires extensive engineering effort, but when the authors
+claim they are developing the first ‘universal controller,’
+such effort is warranted, especially if the main
+application of the method is an autopilot. 
+The comparison against LTF is reasonable, since it is also
+a model free approach of drones of a wider morphology (even
+from the ones tested in this paper!). However, since this
+paper has only tested x-framed quadcopters, [6] is also a
+valid real-world comparison as well (for the same reason as
+simulation results above).}
+
 We test our approach in the physical world and compare its performance to two baselines: \emph{LTF}, which is a learning-based robust controller trained with an error integration as one of inputs~\cite{LTF}; and a platform-specific PID controller.
 %
 The PID controller has access to the platform's mass and inertia, and it has been specifically tuned to the platform with in-flight tests.
@@ -169,6 +200,31 @@ The latter difference in performance is justified, since the PID controller is s
 
 \subsection{Simulation Results}
 
+\todo{Your approach only has a 66\% success rate on the
+stabilization tasks. I think you should provide a more
+thorough discussion on the limitations and weaknesses of
+your approach.	What kind of conditions does your approach
+fail on. }
+
+\todo{A comparison to [6] in simulation is an absolute must.
+Given Belkale et al.’s good tracking error of systems with
+unknown dynamic parameters and quick adaptation time, the
+reviewer believes that this controller may also be a good
+universal controller candidate, even if this paper was only
+tested on a single drone platform.
+When comparing against adaptive control, the argument for
+the author’s approach would be significantly strengthened
+by developing the discussion of why the removal of a
+‘reference’ model and training end-to-end improves
+performance (what does the reference model have to do with
+control latency?). }
+
+\todo{2. Baseline selections
+As mentioned in Related work B -- "Learning-Based Adaptive
+Control", the proposed method is closely related to the
+other learning-based controllers, such as meta-learning
+approaches. Nevertheless, the experimental results are not
+compared with the learning-based baselines. }
 % \begin{table*}[t]
 % \begin{center}
 % \begin{tabular*}{0.95\textwidth}{@{}lcccc@{}}
