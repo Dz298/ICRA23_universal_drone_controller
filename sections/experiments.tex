@@ -41,7 +41,7 @@ The deployed policy outputs motor speed commands, which are subsequently tracked
 %
 We use as high-level a PD controller which takes as input the goal position and outputs the mass normalized collective trust and the body rates.
 
-\mypara{Network Architecture and Training Procedure} The base policy is a 3-layer Multi-layer perceptron (MLP) with 256-dim hidden layers. This takes the drone state and the vector of intrinsics as input to produce motor speeds. The environment factor encoder is a 2-layer MLP with 128-dim hidden layers.  The policy and the value function share the same factor encoding layer. The adaptation module projects the latest 400 state-action pairs into a 128-dim representation. Then, a 3-layer 1-D CNN convolves the representation across time. The flattened CNN output is linearly projected to estimate $z_t$. We train the base policy and the environment encoder using PPO~\cite{schulman2017proximal} for 100M steps. We use the reward outlined in Section~\ref{sec:method}. Policy training takes approximately 2 hours on an ordinary desktop machine with 1 GPU.
+\mypara{Network Architecture and Training Procedure} The base policy is a 3-layer Multi-layer perceptron (MLP) with 256-dim hidden layers. This takes the drone state and the vector of intrinsics as input to produce motor speeds. The environment factor encoder is a 2-layer MLP with 128-dim hidden layers.  The policy and the value function share the same factor encoding layer. The adaptation module projects the latest 400 state-action pairs into a 128-dim representation, with the state-action history initialized with zeros. Then, a 3-layer 1-D CNN convolves the representation across time to capture its temporal correlation. The input channel number, output channel number, kernel size and stride of each CNN layer are [32, 32, 8, 4], [32, 32, 5, 1], [32, 32, 5, 1]. The flattened CNN output is linearly projected to estimate $z_t$. We train the base policy and the environment encoder using PPO~\cite{schulman2017proximal} for 100M steps. We use the reward outlined in Section~\ref{sec:method}. Policy training takes approximately 2 hours on an ordinary desktop machine with 1 GPU.
 %
 We finally train the adaptation module with supervised learning by rolling out the student policy. We train with the ADAM optimizer to minimize MSE loss. 
 %
@@ -51,20 +51,11 @@ We run the optimization process for 10M steps, training on data collected over t
 
 \section{Results}
 
-\todo{I am unclear what the Thrust Err represent. Is the
-requested the Z acceleration?}
+% \todo{I am unclear what the Thrust Err represent. Is the requested the Z acceleration?}
 
-\todo{Two more major changes which I believe are needed,
-more detailed investigation on unseen parameter
-performance, and more detail on the limitations of the
-work.}
+% \todo{Two more major changes which I believe are needed, more detailed investigation on unseen parameter performance, and more detail on the limitations of the work.}
 
-\todo{•	Please include standard errors in results}
-
-\todo{Paragraph breaks between the algorithms used in the
-experiment, the metrics used to compare the methods, and
-the final comparison would make the argument easier to
-read.}
+% \todo{Paragraph breaks between the algorithms used in the experiment, the metrics used to compare the methods, and the final comparison would make the argument easier to read.}
 
 % \begin{figure}[t]
 %     \centering
@@ -151,23 +142,9 @@ Metrics are averaged over 5 experiments.}
 
 \subsection{Real World Deployment}
 
-\todo{While the evaluation of the author’s method is thorough,
-PID serves as a  relatively brittle real-world comparison,
-especially when more capable methods (e.g. L1) exists in
-the literature. The reviewer recognizes that comparing
-against existing approaches (L1, etc.) in the real world
-requires extensive engineering effort, but when the authors
-claim they are developing the first ‘universal controller,’
-such effort is warranted, especially if the main
-application of the method is an autopilot. 
-The comparison against LTF is reasonable, since it is also
-a model free approach of drones of a wider morphology (even
-from the ones tested in this paper!). However, since this
-paper has only tested x-framed quadcopters, [6] is also a
-valid real-world comparison as well (for the same reason as
-simulation results above).}
+% \todo{While the evaluation of the author’s method is thorough, PID serves as a  relatively brittle real-world comparison, especially when more capable methods (e.g. L1) exists in the literature. The reviewer recognizes that comparing against existing approaches (L1, etc.) in the real world requires extensive engineering effort, but when the authors claim they are developing the first ‘universal controller,’ such effort is warranted, especially if the main application of the method is an autopilot.  The comparison against LTF is reasonable, since it is also a model free approach of drones of a wider morphology (even from the ones tested in this paper!). However, since this paper has only tested x-framed quadcopters, [6] is also a valid real world comparison as well (for the same reason as simulation results above).}
 
-We test our approach in the physical world and compare its performance to two baselines: \emph{LTF}, which is a learning-based robust controller trained with an error integration as one of inputs~\cite{LTF}; and a platform-specific PID controller.
+We test our approach in the physical world and compare its performance to two baselines: \emph{LTF}, which is a learning-based robust controller trained with an error integration as one of inputs, aiming to control hybrid UAVs~\cite{LTF}; and a platform-specific PID controller.
 %
 The PID controller has access to the platform's mass and inertia, and it has been specifically tuned to the platform with in-flight tests.
 %
@@ -175,12 +152,14 @@ In contrast, our approach has no knowledge whatsoever of the physical characteri
 %
 We compare the task of stabilization to a predefined set point without any disturbances (free hover), or under an unknown mass and/or inertia disturbance (Figure~\ref{fig:distur}).
 %
+
 We compare the three approaches under four metrics: (i) the average height error to the goal point, and the average tracking error of the (ii) angular velocity and (iii) mass normalized thrust of the high-level controller's commands, and the success rate.
 %
 We define a failure if the human operator had to intervene to avoid the quadcopter from crashing.
 %
 The results of these experiments are reported in table~\ref{tab:rw_results}.
 %
+
 Our approach significantly outperforms both baselines in all metrics under all disturbances. In particular, our approach achieves a 100\% success rate when asymmetric disturbances are applied to the system, while the two baselines both experience at least one total failure on either of the two platforms. 
 %
 The PID baseline and our approach performs similarly in free hovering experiment, with the PID controller slightly outperforming ours on \emph{largequad}.  
@@ -200,31 +179,14 @@ The latter difference in performance is justified, since the PID controller is s
 
 \subsection{Simulation Results}
 
-\todo{Your approach only has a 66\% success rate on the
-stabilization tasks. I think you should provide a more
-thorough discussion on the limitations and weaknesses of
-your approach.	What kind of conditions does your approach
-fail on. }
+% \todo{Your approach only has a 66\% success rate on the stabilization tasks. I think you should provide a more thorough discussion on the limitations and weaknesses of your approach.	What kind of conditions does your approach fail on. }
 
-\todo{A comparison to [6] in simulation is an absolute must.
-Given Belkale et al.’s good tracking error of systems with
-unknown dynamic parameters and quick adaptation time, the
-reviewer believes that this controller may also be a good
-universal controller candidate, even if this paper was only
-tested on a single drone platform.
-When comparing against adaptive control, the argument for
-the author’s approach would be significantly strengthened
-by developing the discussion of why the removal of a
-‘reference’ model and training end-to-end improves
-performance (what does the reference model have to do with
-control latency?). }
+% \todo{A comparison to [6] in simulation is an absolute must. Given Belkale et al.’s good tracking error of systems with unknown dynamic parameters and quick adaptation time, the reviewer believes that this controller may also be a good universal controller candidate, even if this paper was only tested on a single drone platform.}
 
-\todo{2. Baseline selections
-As mentioned in Related work B -- "Learning-Based Adaptive
-Control", the proposed method is closely related to the
-other learning-based controllers, such as meta-learning
-approaches. Nevertheless, the experimental results are not
-compared with the learning-based baselines. }
+% \todo{When comparing against adaptive control, the argument for the author’s approach would be significantly strengthened by developing the discussion of why the removal of a ‘reference’ model and training end-to-end improves performance (what does the reference model have to do with control latency?). }
+
+% \todo{2. Baseline selections As mentioned in Related work B -- "Learning-Based Adaptive Control", the proposed method is closely related to the other learning-based controllers, such as meta-learning approaches. Nevertheless, the experimental results are not compared with the learning-based baselines. }
+
 % \begin{table*}[t]
 % \begin{center}
 % \begin{tabular*}{0.95\textwidth}{@{}lcccc@{}}
@@ -380,13 +342,14 @@ The experiment is considered successful if the end height of the quadcopter is w
 %
 The results of these experiments are reported in Table~\ref{tab:sim-metrics}. 
 %
+
 Given the very large amount of quadcopter variations, the \emph{Robust} baseline trained without access to environment parameters has the lowest success rate and largest tracking error. This is because it is forced to learn a single conservative flying which can fly all quadcopters under varying disturbances.
 %
 Indeed, it either crashes to the ground or flies outside the flying region.
 %
 The baseline \emph{LTF} is \emph{Robust} with an additional observation of error integration. This additional input helps it achieve higher success rate. However, similar to the \emph{Robust} baseline, \emph{LTF} fails in tracking the goal states. 
 %
-On the contrary, with access to the environment parameters, the flight performance strongly increases.
+On the contrary, with estimation of the environment parameters, the flight performance strongly increases.
 %
 \begin{figure}[t]
     \centering
@@ -395,15 +358,17 @@ On the contrary, with access to the environment parameters, the flight performan
     \label{fig:intrinsics_analysis}
 \end{figure}
 %
-Still, explicitly regressing the environment vector $e_t$, instead of its low-dimensional representation $z_t$, scarifies the success rate since it is trying to solve a harder estimation problem which is not necessary to solve the task at hand.
+Still, explicitly regressing the environment vector $e_t$, instead of its low-dimensional representation $z_t$, yields the success rate since it is trying to solve a harder estimation problem which is not necessary to solve the task at hand.
 %
 Since the tracking errors are computed only for successful runs, the \emph{SysID} baseline achieves a slightly lower tracking error in one of the metrics.
 %
-$\mathcal{L}1$ is the baseline with the strongest performance in our simulation experiments. However, it relies on the explicit knowledge of a reference model which we choose as the median value of all parameters in the testing range in Table~\ref{tab:randomization}, while our method with other baselines has no prior knowledge of the model. 
+$\mathcal{L}1$ is the baseline with the strongest performance in our simulation experiments. However, its strong performance relies on the explicit knowledge of a reference model which we choose as the median value of all parameters in the testing range in Table~\ref{tab:randomization}, while our method with other baselines has no prior knowledge of the model. 
 %
-% The comparison between our method and $\mathcal{L}1$ shows that it is not enough to achieve adaptive control across platforms by estimating and compensating large model variance in model dynamics from a reference model. 
-However, $\mathcal{L}1$ is not implemented in our real-world experiments as a baseline because it is highly sensitive to latency and requires significant engineering work. In contrast, our approach can handle latency very well by simulating it during training.
+The performance gap between our method and $\mathcal{L}1$ shows that the adaptive control across platforms is hard to achieve by estimating and compensating large variance from a reference model. 
 %
+$\mathcal{L}1$ is not implemented in our real-world experiments as a baseline because it is highly sensitive to latency and requires significant engineering work. In contrast, our approach can handle latency very well by simulating it during training.
+%
+
 We also evaluate the task of stabilization on held-out environmental disturbances, as exemplified by random external forces and partial failure of a motor. The results of these experiments are reported in Table~\ref{tab:sim-metrics-unseen-disturb}. Our method outperforms all baselines in both out-of-distribution disturbances cases. Compared to the strongest baseline $\mathcal{L}1$, our method reduces the failure rate by up to 1.14 times, the average height error by up to 67.7\%,  and the average command tracking error by up to 22.4\%. 
 
 % %
@@ -434,6 +399,6 @@ We find that whenever a payload is applied, there is a change in all intrinsics 
 Then the quadcopter recovers from the disturbance and all components of the intrinsics vector converges to different values as they are before the payload is applied. 
 % It shows that even after adaptation, the adaptation module still detects the existence of payloads. 
 %
-From the change of the plotted components of intrinsics vector in response to the disturbance, we see that it takes around 2s for our controller to detect the disturbance, estimate the intrinsics vector, adapts from the disturbance, and finally stablizes. 
+From the change of the plotted components of intrinsics vector in response to the disturbance, we see that it takes around 2s for our controller to detect the disturbance, estimate the intrinsics vector, adapts from the disturbance, and finally stabilizes. 
 %
 The adaptation period of our controller is much faster than that of methods with online estimation of ground truth model parameters such as~\cite{wuest2019online}, where it takes 10s to 15s in-flight to obtain an accurate model estimate.

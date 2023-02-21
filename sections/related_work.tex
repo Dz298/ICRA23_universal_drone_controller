@@ -1,22 +1,15 @@
 \section{Related Work}
 \label{sec:rel_work}
 
-\todo{Lit Review: Should include this work ‘Hardware Conditioned
-Policies for Multi-Robot Transfer Learning’ (I will refer
-to this paper as [1]) . This also uses a learned latent
-representation for the robot. }
+% \todo{Lit Review: Should include this work ‘Hardware Conditioned Policies for Multi-Robot Transfer Learning’ (I will refer to this paper as [1]) . This also uses a learned latent representation for the robot. }
+
+% \todo{add LTF in lit rev} - no necessary with current Lit Review topic: adaptive control
 
 % \todo{move related work ahead}
-\todo{Similar feedback to the discussion: Section II.B. does not
-provide a convincing argument as to why any of the existing
-learning-based methods (can solve the universal control
-problem). 
-When comparing alternative methods, include the algorithms
-used in the experimental results to strengthen the argument
-as to why the universal controller has not been found yet.
-}
-\todo{Second of introduction should be incorporated into this
-section, but otherwise the writing is clear.}
+
+% \todo{Similar feedback to the discussion: Section II.B. does not provide a convincing argument as to why any of the existing learning-based methods (can solve the universal control problem). When comparing alternative methods, include the algorithms used in the experimental results to strengthen the argument as to why the universal controller has not been found yet.}
+
+% \todo{Second of introduction should be incorporated into this section, but otherwise the writing is clear.}
 
 The design of high-performance adaptive controllers for aerospace systems has been a top priority for researchers and industry for more than 50 years.
 % \todo{This isn't true, though? quadcopters may have been invented 100 years ago, but until we had small IMUs (maybe 20 years ago) no-one was really working on them, and certainly not a `top priority'.}
@@ -129,7 +122,7 @@ Meta-learning has also been proposed to augment the performance of the model-bas
 %
 These methods achieved impressive results in disturbance rejection.
 %
-However, they are still tailored to a specific platform type, and lack an explicit mechanism for adaptation to drastic changes in the drone's model and actuation.
+However, they are still tailored to a specific platform type, and lack an explicit mechanism for adaptation to drastic changes in the drone's model and actuation. They also require relatively expensive real world learning samples. 
 %
 Our work aims to fill this gap and create a single control policy capable of flying vehicles with vastly varying physical characteristics and under large disturbances.
 %
