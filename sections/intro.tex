@@ -64,40 +64,40 @@
 % %
 % }
 
-\propose{
-\begin{enumerate}
-    \item Optimal control of quadcopter requires a delicate design of controller. 
-    \item This controller requires accurate model estimtion.
-    \item Laborious procedure description 
-    \item Laborious procedure will be eased if a single controller exists. 
-    \item Not existed, because it's hard with unstable dynamics.
-    \item Model uncertainty and disturbance rejection requires more layer of complexity
-\end{enumerate}
-}
+% \propose{
+% \begin{enumerate}
+%     \item Optimal control of quadcopter requires a delicate design of controller. 
+%     \item This controller requires accurate model estimtion.
+%     \item Laborious procedure description 
+%     \item Laborious procedure will be eased if a single controller exists. 
+%     \item Not existed, because it's hard with unstable dynamics.
+%     \item Model uncertainty and disturbance rejection requires more layer of complexity
+% \end{enumerate}
+% }
 
-\todo{The joy of the design and assembly of a new quadcopter is generally followed by great despair.
-%
-Once the hardware is in place, getting the quadcopter into the air may apparently look like a simple task.
-%
-Well-established systems provide a simple way for generating trajectories and high-level controllers for tracking them (e.g., \cite{mueller2019trajectory,mellinger2012trajectory,kaufmann2020RSS}).
-%
-Such high-level controllers generally abstract action in terms of thrust and angular rates.
-%
-The interface between these actions and motor commands, physically executable by the hardware, is an \emph{appropriate} low-level controller. % that, e.g., meet certain specification on closed-loop time constants.
-%
-And here is where the headaches start.}
+% \todo{The joy of the design and assembly of a new quadcopter is generally followed by great despair.
+% %
+% Once the hardware is in place, getting the quadcopter into the air may apparently look like a simple task.
+% %
+% Well-established systems provide a simple way for generating trajectories and high-level controllers for tracking them (e.g., \cite{mueller2019trajectory,mellinger2012trajectory,kaufmann2020RSS}).
+% %
+% Such high-level controllers generally abstract action in terms of thrust and angular rates.
+% %
+% The interface between these actions and motor commands, physically executable by the hardware, is an \emph{appropriate} low-level controller. % that, e.g., meet certain specification on closed-loop time constants.
+% %
+% And here is where the headaches start.}
 
-\todo{A classic low-level controller requires explicit estimates of the vehicle inertia properties (MMOI and mass), motor constants, and other parameters.
+A classic controller for quadcopters requires explicit estimates of the vehicle's model, including inertia properties (MMOI and mass), motor constants, and other parameters.
 %
-Errors in estimating such parameters directly translate to errors in the execution of the high-level controller commands.
+Errors in estimating such parameters directly translate to errors in the execution of the controller commands.
 %
-In addition, once the parameters are estimated, the low-level controller requires specific tuning in-flight to achieve the desired behaviour.
+In addition, once the parameters are estimated, the controller requires specific tuning in-flight to achieve the desired behaviour.
 %
-If the estimation and tuning is done right, the final performance will be very good.
+% If the estimation and tuning is done right, the final performance will be very good.
 %
-But what looked like a simple task required significant engineering effort.
+% But what looked like a simple task required significant engineering effort.
 %
-Unfortunately, a small modification to the vehicle, e.g., replacing the motors with ones that have different properties or a different shape, would require repeating the above steps.
+A small modification to the vehicle, e.g., replacing the motors with ones that have different properties or a different shape, would require repeating the above steps in estimation and tuning.
 %
 Such significant engineering efforts could be eased with a single controller without specialized tuning. However, this problem raises several challenges since quadcopters are very unstable systems. 
 %
@@ -105,41 +105,41 @@ Large variations in quadcopter design have prompted the design of specialized co
 %
 Rejection to disturbances or model uncertainties requires non-trivial design changes to the specialized controllers, which add more layers of complexity to the design work.
 %
-Such engineering effort is compounded when the vehicle has variable properties, e.g., can carry different payloads or has a changing shape~\cite{falanga2018foldable,derrouaoui2022adaptive}.
-%
-Moreover, additional engineering effort and tuning is required if the controller needs to be robust against model uncertainties or external disturbances, e.g. aerodynamics effects or wind~\cite{shi2019neural, neuralfly, torrente2021data}.}
+% Such engineering effort is compounded when the vehicle has variable properties, e.g., can carry different payloads or has a changing shape~\cite{falanga2018foldable,derrouaoui2022adaptive}.
+% %
+% Moreover, additional engineering effort and tuning is required if the controller needs to be robust against model uncertainties or external disturbances, e.g. aerodynamics effects or wind~\cite{shi2019neural, neuralfly, torrente2021data}.
 
-\todo{Introduction
-This section could be better organized to motivate why a
-universal controller is important, and why existing
-approaches do not serve as universal controllers. More
-specifically:
-Organization:
-Authors should provide motivation (e.g. autopilot without
-tuning) in the first paragraph before beginning a
-discussion on why the universal control problem is
-technically challenging.
-Authors should briefly state what their universal
-controller actually accomplishes (e.g. low-level control of
-thrust and angular velocity), which is not clear in the
-introduction.
-Discussion related to the technical challenge of the
-problem is scattered through the introduction and can be
-consolidated. 
-The reasoning behind why past approaches are not
-universal drone controllers should be better justified.}
+% \todo{Introduction
+% This section could be better organized to motivate why a
+% universal controller is important, and why existing
+% approaches do not serve as universal controllers. More
+% specifically:
+% Organization:
+% Authors should provide motivation (e.g. autopilot without
+% tuning) in the first paragraph before beginning a
+% discussion on why the universal control problem is
+% technically challenging.
+% Authors should briefly state what their universal
+% controller actually accomplishes (e.g. low-level control of
+% thrust and angular velocity), which is not clear in the
+% introduction.
+% Discussion related to the technical challenge of the
+% problem is scattered through the introduction and can be
+% consolidated. 
+% The reasoning behind why past approaches are not
+% universal drone controllers should be better justified.}
 
-In this paper, we show the first universal controller for quadcopters. \todo{'universal' to 'generalized'?}
-%
-Quadcopters are inherently unstable and require high-frequency control of up to 500Hz. 
-%
-Failure to adapt to perturbations within fractions of a second can potentially lead to a crash.
-%
-Consequently, a universal controller should not only be able to handle diverse perturbations, it should do so very fast. 
+% In this paper, we show the first universal controller for quadcopters. 
+% %
+% Quadcopters are inherently unstable and require high-frequency control of up to 500Hz. 
+% %
+% Failure to adapt to perturbations within fractions of a second can potentially lead to a crash.
+% %
+% Consequently, a universal controller should not only be able to handle diverse perturbations, it should do so very fast. 
 %
 % \todo{The introduction indicates that the controller is able to adapt to new situations within 0.8 sec (which corresponds to the window of 400 steps). But in Section V.C, empirical results indicate that the adaptation period is close to 2 secs.}
 %
-In this work, we learn a single controller which is capable of controlling a variety of quadcopters with differences in mass, armlength, motor constant, etc. of up to 4 times within one second, without any modification or fine-tuning for the specific quadcopters. 
+In this work, we show the first controller which is capable of controlling a variety of quadcopters with differences in mass, armlength, motor constant, etc. of up to 4 times within one second, without any modification or fine-tuning for the specific quadcopters. 
 %
 In addition, our controller can rapidly adapt to unknown disturbances in the mass and inertia changes of the quadcopters.
 %
