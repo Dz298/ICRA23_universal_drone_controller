@@ -5,11 +5,14 @@ We successfully transfer a method initially developed for legged locomotion in a
 %
 Without any additional tuning or modification, the single policy trained only in simulation can be deployed zero-shot to real quadcopters of very different design and hardware characteristics while showing rapid adaptation to unknown disturbances at the same time.
 %
-Adaptive control has achieved great success in adaptation to model uncertainties and disturbances, but our work offers a fresh view on the meaning of adaptation by completely bypassing the notion of a \emph{reference} model that most adaptive control methods use. 
+However, our current controller is a quasi-static position controller which fails on tracking aggressive flights. 
+%
+Future work should focus on improving its ability to track arbitrary trajectories to achieve a universal quadcopter controller. 
+% Adaptive control has achieved great success in adaptation to model uncertainties and disturbances, but our work offers a fresh view on the meaning of adaptation by completely bypassing the notion of a \emph{reference} model that most adaptive control methods use. 
 %
 %while additionally showing rapid adaptation to unknown payloads during deployment. It differs from classic adaptative control in that it does not compensates for disparities between observations and the referenced model.
 %
-This feature enables our method to adapt to a much wider range of robots and disturbances.
+% This feature enables our method to adapt to a much wider range of robots and disturbances.
 %
 %
 % One limitation of our approach is that it relies on simulation to improve, necessitating the need to replicate and train on situations in the simulation in which it might fail to work in the real world. A more scalable lifelong solution to the problem would be to continuously learn in the real world with the data collected during deployment in the real world. 

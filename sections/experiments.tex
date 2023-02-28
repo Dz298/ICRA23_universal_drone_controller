@@ -67,7 +67,8 @@ We run the optimization process for 10M steps, training on data collected over t
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{img/disturbance-include-held-out.png}
-    \caption{\textbf{Upper Left}: Large and small quadcopters mounted with an inertia board. For the large quadcopter, we mount a wrench of 20.5cm and 140g. For the small quadcopter, a wrench of 14.5cm and 30g. \textbf{Upper Right}: Large and small quadcopters with a rigid payload. For the former, we add a load of 180g ($\approx 25\%$ of its weight). For the latter, we add a load of 50g, which corresponds to 35.7\% of its weight. \textbf{Lower Left}: Large and small quadcopters with random pushes/pulls. \textbf{Lower Right}: Large and small quadcopters with a swing payload, which is the wrench in the inertia board test. Despite such large disturbances unknown to the control policy, our approach can always stabilize the quadcopter.}
+    \caption{\small \textbf{Upper Left}: Large and small quadcopters mounted with an inertia board. For the large quadcopter, we mount a wrench of 20.5cm and 140g. For the small quadcopter, a wrench of 14.5cm and 30g. \textbf{Upper Right}: Large and small quadcopters with a rigid payload. For the former, we add a load of 180g ($\approx 25\%$ of its weight). For the latter, we add a load of 50g, which corresponds to 35.7\% of its weight. \textbf{Lower Left}: Large and small quadcopters with random pushes/pulls. \textbf{Lower Right}: Large and small quadcopters with a swing payload, which is the wrench in the inertia board test. Despite such large disturbances unknown to the control policy, our approach can always stabilize the quadcopter.}
+    \vspace{-3ex}
     \label{fig:distur}
 \end{figure}
 
@@ -96,6 +97,9 @@ We run the optimization process for 10M steps, training on data collected over t
 
 
 \begin{table}[t]
+\caption{\label{tab:rw_results} \textbf{Real-World  Results:} We compare the performance of our controller to two baselines: \emph{LTF} and a PID controller. The comparison is run on three tasks for large and small quadcopters. \textbf{Free Hover}: hover at the goal position without any disturbances. \textbf{Inertia Board}: hover at the goal position under an unknown mass and inertia disturbance. \textbf{Payload}: hover at the goal position under an unknown mass disturbance.  
+% The \emph{LTF} learns a robust policy to all variations seen in the training by inputting an error integration into observations, while the PID controller has specifically been tuned to the two quadcopters with in-flight tests. We see that our approach significantly outperforms the two baseline in all metrics under all disturbances, particularly in inertia board case. Our method and the PID controller perform similarly on free hovering case with the PID controller sometimes outperforming our method. This is expected because the PID controller is specifically tuned for each quadcopter. 
+Metrics are averaged over 5 experiments.}
 \setlength{\tabcolsep}{3pt}
 \def \arraystretch{1.4}
 \centering
@@ -132,10 +136,7 @@ We run the optimization process for 10M steps, training on data collected over t
 \multicolumn{1}{c}{} &  & Ours & 0.04 & 0.34 & 1.19 & 100 \\
 \bottomrule
 \end{tabular}
-\vspace{2ex}
-\caption{\label{tab:rw_results} \textbf{Real-World  Results:} We compare the performance of our controller to two baselines: \emph{LTF} and a PID controller. The comparison is run on three tasks for large and small quadcopters. \textbf{Free Hover}: hover at the goal position without any disturbances. \textbf{Inertia Board}: hover at the goal position under an unknown mass and inertia disturbance. \textbf{Payload}: hover at the goal position under an unknown mass disturbance.  
-% The \emph{LTF} learns a robust policy to all variations seen in the training by inputting an error integration into observations, while the PID controller has specifically been tuned to the two quadcopters with in-flight tests. We see that our approach significantly outperforms the two baseline in all metrics under all disturbances, particularly in inertia board case. Our method and the PID controller perform similarly on free hovering case with the PID controller sometimes outperforming our method. This is expected because the PID controller is specifically tuned for each quadcopter. 
-Metrics are averaged over 5 experiments.}
+% \vspace{2ex}
 \end{table}
 
 
@@ -205,6 +206,10 @@ The latter difference in performance is justified, since the PID controller is s
 % \end{table*}
 
 \begin{table}[h]
+\caption{\label{tab:sim-metrics} \textbf{Simulation Testing Results:} We compare our method with four baselines on the task of stabilization: \emph{Robust}, \emph{SysID}, \emph{LTF}, and $\mathcal{L}1$. We also list the results of our method in Phase I training, which has access to all ground-truth system parameters and can be regarded as the expert. The test ranges are defined in Table~\ref{tab:randomization}.
+% The \emph{Robust} learns a single conservative flying method for all the variations seen during training; the \emph{SysID} baseline tries to predict the exact environment parameters which is both not difficult and not necessary to solve the task; the \emph{LTF} baseline learns a robust policy with an additional input of an error integration; and the $\mathcal{L}1$ is a model-based adaptive controller which estimates and compensates for difference between the nominal and observed states. We observe that our method which is adaptive and estimates a low dimensional intrinsics outperforms all the baselines on the success rate and the average height tracking error. Our method also achieves comparable performance on the tracking of average angular velocity and normalized thrust with baselines best on these metrics. Our method's performance is most closest to the performance of the expert Phase I which has access to the ground truth system parameters. 
+Metrics are averages over 100 experiments.
+}
 \centering
 \begin{tabular*}{0.45\textwidth}{@{}lcccc@{}}
 \toprule
@@ -239,14 +244,11 @@ The latter difference in performance is justified, since the PID controller is s
 % ang vel y err & 1.16   & 1.06  & 1.10    & 1.25 & 1.09 \\
 % \bottomrule
 % \end{tabular}
-\caption{\label{tab:sim-metrics} \textbf{Simulation Testing Results:} We compare our method with four baselines on the task of stabilization: \emph{Robust}, \emph{SysID}, \emph{LTF}, and $\mathcal{L}1$. We also list the results of our method in Phase I training, which has access to all ground-truth system parameters and can be regarded as the expert. The test ranges are defined in Table~\ref{tab:randomization}.
-% The \emph{Robust} learns a single conservative flying method for all the variations seen during training; the \emph{SysID} baseline tries to predict the exact environment parameters which is both not difficult and not necessary to solve the task; the \emph{LTF} baseline learns a robust policy with an additional input of an error integration; and the $\mathcal{L}1$ is a model-based adaptive controller which estimates and compensates for difference between the nominal and observed states. We observe that our method which is adaptive and estimates a low dimensional intrinsics outperforms all the baselines on the success rate and the average height tracking error. Our method also achieves comparable performance on the tracking of average angular velocity and normalized thrust with baselines best on these metrics. Our method's performance is most closest to the performance of the expert Phase I which has access to the ground truth system parameters. 
-Metrics are averages over 100 experiments.
-\vspace{-3ex}
-}
 \end{table}
 
 \begin{table}[h]
+\caption{\label{tab:sim-metrics-unseen-disturb} \textbf{Simulation Testing Results, Out-of-Distribution Disturbances}: We evaluate the performance of our method and all baselines on two types of disturbances unseen at training time. \textbf{External Forces}: We apply a random force of magnitude uniformly sampled between 0 and 50\% of the weight and with direction uniformly sampled on a cube. \textbf{Partially Failing Motors}: To simulate a motor losing efficiency, we multiply the output of a randomly sampled motor’s thrust force to a random number between 0 and 1. The duration of each disturbance is random between the entire length of the episode (on and off with 2\% probability at every time stamp).
+}
 \centering
 \begin{tabular*}{0.45\textwidth}{@{}lcccc@{}}
 \toprule
@@ -266,9 +268,6 @@ Metrics are averages over 100 experiments.
  Ours & 38\% & 0.26 & 1.36 & 1.01\\
 \bottomrule
 \end{tabular*}
-\caption{\label{tab:sim-metrics-unseen-disturb} \textbf{Simulation Testing Results, Out-of-Distribution Disturbances}: We evaluate the performance of our method and all baselines on two types of disturbances unseen at training time. \textbf{External Forces}: We apply a random force of magnitude uniformly sampled between 0 and 50\% of the weight and with direction uniformly sampled on a cube. \textbf{Partially Failing Motors}: To simulate a motor losing efficiency, we multiply the output of a randomly sampled motor’s thrust force to a random number between 0 and 1. The duration of each disturbance is random between the entire length of the episode (on and off with 2\% probability at every time stamp).
-\vspace{-3ex}
-}
 \end{table}
 
 % \begin{table*}[h]
@@ -354,7 +353,7 @@ On the contrary, with estimation of the environment parameters, the flight perfo
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{img/extrinsics_plot_timescale.pdf}
-    \caption{We analyze the change in behaviour of our policy as we incrementally add total 290g payloads to our quadcopter. We plot all 6 components of the intrinsics vector $\hat{z_t}$ predicted by the adaptation module. We see that changes in intrinsics are strongly correlated with disturbances applied to the quadcopter, indicating that the added payloads have been detected by the adaptation module. When the payload is added, the quadcopter first sinks and then recovers to the normal motion. The plotted components of the intrinsics vector change in response to the disturbance, from which we know the adaptation period takes around 2s.}
+    \caption{\small We analyze the change in behaviour of our policy as we incrementally add total 290g payloads to our quadcopter. We plot all 6 components of the intrinsics vector $\hat{z_t}$ predicted by the adaptation module. We see that changes in intrinsics are strongly correlated with disturbances applied to the quadcopter, indicating that the added payloads have been detected by the adaptation module. When the payload is added, the quadcopter first sinks and then recovers to the normal motion. The plotted components of the intrinsics vector change in response to the disturbance, from which we know the adaptation period takes around 2s.}
     \label{fig:intrinsics_analysis}
 \end{figure}
 %

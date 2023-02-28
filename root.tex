@@ -4,6 +4,28 @@
 
 \documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
 
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
 %\addbibresource{references.bib}
 \usepackage{multicol}
 %\usepackage[bookmarks=true]{hyperref}
@@ -49,28 +71,6 @@
 
 \usepgfplotslibrary{groupplots}
 \usepgfplotslibrary{dateplot}
-
-%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
-
-\IEEEoverridecommandlockouts                              % This command is only needed if 
-                                                          % you want to use the \thanks command
-
-\overrideIEEEmargins                                      % Needed to meet printer requirements.
-
-%In case you encounter the following error:
-%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
-%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
-%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
-%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
-%\pdfobjcompresslevel=0
-%\pdfminorversion=4
-
-% See the \addtolength command later in the file to balance the column lengths
-% on the last page of the document
-
-% The following packages can be found on http:\\www.ctan.org
-%\usepackage{graphics} % for pdf, bitmapped graphics files
-%\usepackage{epsfig} % for postscript graphics files
 %\usepackage{mathptmx} % assumes new font selection scheme installed
 %\usepackage{times} % assumes new font selection scheme installed
 %\usepackage{amsmath} % assumes amsmath package installed
@@ -89,7 +89,8 @@
 % Rapidly Adapting Quadcopter Controllers:\\ One Policy to Fly Them All
 % Scaling Up Adaptation for Quadcopters
 % Universal Quadcopter Controllers:\\A Learning Approach for Zero-shot Adaptive Quadcopter Control
-A Zero-Shot Adaptive Quadcopter Controller
+% A Zero-Shot Adaptive Quadcopter Controller
+A Single Near-hover Position Controller\\for Vastly Different Quadcopters
 % An adaptive controller for quadcopters capable of compensating for extreme parameter variations
 }
 
@@ -110,6 +111,7 @@ A Zero-Shot Adaptive Quadcopter Controller
 \thispagestyle{empty}
 \pagestyle{empty}
 
+\todo{formatting to fit 6+n}
 % \todo{•	How do you initialize the history to estimate z in the real world. Specifically, what are the initial history to generate z, or how do you generate z for the first iteration?}
 
 % \todo{I think similar to [1] you could do a PCA analysis on the embedding space to see how the mass or other parameters affect the embedding. }
@@ -122,8 +124,7 @@ A Zero-Shot Adaptive Quadcopter Controller
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-
-This paper proposes a universal adaptive controller for quadcopters, which can be deployed zero-shot to quadcopters of very different mass, arm lengths and motor constants, and also shows rapid adaptation to unknown disturbances during runtime. The core algorithmic idea is to learn a single policy that can adapt online \emph{at test time} not only to the disturbances applied to the drone, but also to the robot dynamics and hardware in the same framework.
+This paper proposes an adaptive near-hover position controller for quadcopters, which can be deployed zero-shot to quadcopters of very different mass, arm lengths and motor constants, and also shows rapid adaptation to unknown disturbances during runtime. The core algorithmic idea is to learn a single policy that can adapt online at test time not only to the disturbances applied to the drone, but also to the robot dynamics and hardware in the same framework.
 We achieve this by training a neural network to estimate a latent representation of the robot and environment parameters, which is used to condition the behaviour of the controller, also represented as a neural network. We train both networks exclusively in simulation with the goal of flying the quadcopters to goal positions and avoiding crashes to the ground. We directly deploy the same controller trained in the simulation without any modifications on two quadcopters with differences in mass, inertia, and maximum motor speed of up to 4 times. In addition, we show rapid adaptation to sudden and large disturbances (up to 35.7\%) in the mass and inertia of the quadcopters. We perform an extensive evaluation in both simulation and the physical world, where we outperform a state-of-the-art learning-based adaptive controller and a traditional PID controller specifically tuned to each platform individually. Video results can be found at~\url{https://youtu.be/3yQrDML5aWs}. %We will release our code and trained model upon acceptance.
 
 \end{abstract}
