@@ -10,17 +10,16 @@
 % \todo{Also, when describing the network architecture, it would be clearer to separate better the description of the factor encoder and the adaptation module; and give more details of the latter for the sake of reproducibility.}
 
 % \todo{- What is the window k used in the adaptation module (it seems the value of k is 400 according to page 4; 0.8 secs).}
-We learn a single position controller to fly quadcopters to target positions and stay hovering. This controller takes a history of platform states and commands from a platform-independent high level controller as inputs, and outputs individual motor speed. Our resulting policy can control quadcopters with very different design and hardware characteristics, and is robust to disturbances unseen at training time, such as swing payloads and malfunctioned motors.
+We learn a single position controller to fly quadcopters to target positions and stay hovering. This controller takes a history of platform states and commands from a platform-independent high level controller as inputs, and outputs individual motor speed. Our resulting policy can control quadcopters with very different design and hardware characteristics, and is robust to disturbances unseen at training time, such as swing payloads and malfunctioning motors.
 %In this work, we view both of these as adaptations to parameters intrinsic and extrinsic to drones, and we will learn a single adaptive policy capable of flying multiple different quadcopter drones under variations in payload and inertia. 
-
- To achieve this, we use RMA~\cite{kumar2021rma}. However, we re-purpose the adaption module, originally used to estimate parameters external to the robot, e.g. friction, to estimate the robot's intrinsic parameters (e.g. its mass, inertia, motor constant, etc.) In the following, we recapitulate the method of RMA for completeness. Our policy consists of a base policy $\pi$ and an adaptation module $\phi$. The base policy $\pi$ takes the current state $x_t \in \mathbb{R}^{23}$ and an intrinsics vector $z_t \in \mathbb{R}^6$ as input and outputs the target motor speed $a_t \in \mathbb{R}^4$ for all individual motors. The current state $x_t$ includes the vehicle's position, velocity, rotation matrix, mass-normalized thrust, angular velocity, commanded thrust and commanded angular velocity. The intrinsics vector $z_t$ is a compressed version of the environment parameters $e_t$ containing drone parameters, payload, etc. It allows the base policy to adapt to variations in drone parameters, payloads, and disturbances such as wind. Since we cannot directly measure $z_t$ in the real world, we instead estimate it via the adaptation module $\phi$, which uses the discrepancy between the commanded actions and the measured sensor readings to estimate it online during deployment. More concretely, 
+ To achieve this, we use RMA~\cite{kumar2021rma}. However, we re-purpose the adaption module, originally used to estimate parameters external to the robot, e.g. friction, to estimate the robot's intrinsic parameters (e.g. its mass, inertia, motor constant, etc.). In the following, we recapitulate the method of RMA for completeness. Our policy consists of a base policy $\pi$ and an adaptation module $\phi$. At time $t$, the base policy $\pi$ takes the current state $x_t \in \mathbb{R}^{23}$ and an intrinsics vector $z_t \in \mathbb{R}^6$ as input and outputs the target motor speeds $a_t \in \mathbb{R}^4$ for all individual motors. The current state $x_t$ includes the vehicle's position, velocity, rotation matrix, mass-normalized thrust, angular velocity, commanded total thrust and commanded angular velocity. The intrinsics vector $z_t$ is a low dimensional encoding of the environment parameters $e_t$ containing drone parameters, payload, etc. It allows the base policy to adapt to variations in drone parameters, payloads, and disturbances such as external force or torque. Since we cannot directly measure $z_t$ in the real world, we instead estimate it via the adaptation module $\phi$, which uses the discrepancy between the commanded actions and the measured sensor readings from the latest $k$ steps to estimate it online during deployment. More concretely, 
 \begin{align}
     \hat{z_t} &=  \phi\big(x_{t-k:t-1}, a_{t-k:t-1}\big) \\
     a_t &= \pi(x_t, \hat{z_t}) \label{eq:pi}
 \end{align}
 
 \subsection{Base Policy}
-We learn the base policy $\pi$ in simulation using model-free RL. The base policy takes the current state $x_t$ and the intrinsics vector $z_t$ to output control commands $a_t$. We use the network $\mu$ to compress $e_t$ to $z_t$. This gives us:
+We learn the base policy $\pi$ in simulation using model-free Reinforcement Learning (RL). During training, the base policy takes the current state $x_t$ and the ground-truth intrinsics vector $z_t$ to output control commands $a_t$. We use the environmental factor encoder $\mu$ to compress $e_t$ to $z_t$. This gives us:
 \begin{align}
         z_t &= \mu(e_t) \\  
         a_t &= \pi(x_t, z_t)
@@ -28,19 +27,19 @@ We learn the base policy $\pi$ in simulation using model-free RL. The base polic
 
 % \todo{remove previous action from obs}
 
-We implement $\mu$ and $\pi$ as MLPs and jointly train the base policy $\pi$ and the environmental factor encoder $\mu$ end to end using model-free reinforcement learning. RL maximizes the following expected return of the policy $\pi$: 
+We implement $\mu$ and $\pi$ as Multi-layer perceptrons (MLP) and jointly train the base policy $\pi$ and the environmental factor encoder $\mu$ end-to-end using model-free RL. RL maximizes the following expected return of the policy $\pi$: 
 \begin{align}
     J(\pi) = \mathbb{E}_{\tau \sim p(\tau|\pi)}\Bigg[\sum_{t=0}^{T-1}\gamma^t r_t\Bigg],
 \end{align}
 where $\tau = \{(x_0, a_0, r_0), (x_1, a_1, r_1) . . .\}$ is the trajectory of the agent when executing the policy $\pi$, and $p(\tau|\pi)$ represents the likelihood of the trajectory under $\pi$.
 
-\paragraph{RL Reward} The following reward function encourages the agent to hover at a goal position and penalizes it for crash and oscillating motions. Let us denote the acceleration in the $z$-axis i.e. the mass-normalized thrust as $\mathbf{c}$, the angular velocity as $\bm{\omega}$, all in the quadcopter's body frame. The commanded mass-normalized thrust is defined as $\bm{c}_{des}$, commanded angular velocity as $\bm{\omega}_{des}$, all given by the high-level controller.
-We additionally define the motor speed as $\bm{m}$ and the simulation step in the training as $\bm{\delta t}$. The reward at time $t$ is defined as the sum of the following quantities:
+\paragraph{RL Reward} The following reward function encourages the agent to hover at a goal position and penalizes crashes and oscillating motions. Let us denote the acceleration in the body-fixed thrust axis, i.e. the mass-normalized thrust as $c$, the angular velocity as $\bm{\omega}$, all in the quadcopter's body frame. The commanded mass-normalized thrust is defined as $c_{des}$, commanded angular velocity as $\bm{\omega}_{des}$, all given by the high-level controller.
+We additionally define the motor speeds as $\bm{m}$ and the simulation step in the training as $\delta t$. The reward at time $t$ is defined as the sum of the following quantities:
 \begin{enumerate}
-    \item Angular Velocity Tracking : $-\| \bm{\omega}^{t} - \bm{\omega}_{des}^{t} \|$
-    \item Mass-normalized Thrust Tracking: $-\| \mathbf{c}^{t} - \mathbf{c}_{des}^{t} \|$
-    \item Output Command Smoothness: $-\| \bm{m}^{t} - \bm{m}^{t-1} \|$
-    \item Survive: $\bm{\delta t}$
+    \item Angular Velocity Tracking Deviation Penalty: \\$-\| \bm{\omega}^{t} - \bm{\omega}_{des}^{t} \|$
+    \item Mass-normalized Thrust Tracking Deviation Penalty: $-\| {c}^{t} - {c}_{des}^{t} \|$
+    \item Output Command Oscillation Penalty: $-\| \bm{m}^{t} - \bm{m}^{t-1} \|$
+    \item Survival Reward: $\delta t$
 \end{enumerate}
 The scaling factor of each reward term is $0.01$, $0.02$, $0.0002$, $1$ respectively. 
 
@@ -78,7 +77,7 @@ The scaling factor of each reward term is $0.01$, $0.02$, $0.0002$, $1$ respecti
 % \paragraph{Drone and Environment Randomization} We randomize the drone parameters which includes mass, arm length, inertia matrix, $\kappa$ ( propeller torque to thrust ratio constant), propeller thrust from speed squared constant, body drag coefficient, max motor speed and other external parameters like payload (Table~\ref{tab:randomization}). Note that we define a single vector $e_t$ which includes both the drone and the environment parameters and compress it into a single extrinsics vector $z_t$.  
 
 \subsection{Adaptation Module}
-During deployment, we do not have access to the vector $e_t$ and hence we cannot compute the intrinsics vector $z$. Instead, we will use the sensor and action history to directly estimate $z_t$ as proposed in ~\cite{kumar2021rma}. We call this module the adaptation module $\phi$, and we will train this in simulation itself $a_t = \pi(x_t, \hat{z_t})$. We can train this module in simulation using supervised learning because we have access to both the ground truth intrinsics $z_t$, and the sensor history and previous actions. We minimize the mean squared error loss $\lVert z - \hat{z} \rVert ^2$.  
+During deployment, we do not have access to the vector $e_t$ and hence we cannot compute the intrinsics vector $z_t$. Instead, we will use the sensor and action history to directly estimate $z_t$ as proposed in \cite{kumar2021rma}. We call this module the adaptation module $\phi$. We can train this module in simulation using supervised learning because we have access to both the ground truth intrinsics $z_t$, and the sensor history and previous actions. We minimize the mean squared error loss $\lVert z - \hat{z} \rVert ^2$.  
 
 \subsection{Deployment}
-We directly deploy the base policy $\pi$ which uses the current state and the intrinsics vector $\hat{z}$ predicted by the adaptation module $\phi$. We do not calibrate or finetune our policy on any drones and use the same policy without any modifications as the controller of the different drones under different payload and conditions.
+We directly deploy the base policy $\pi$ which uses the current state $x_t$ and the intrinsics vector $\hat{z_t}$ predicted by the adaptation module $\phi$. We do not calibrate or finetune our policy, and use the same policy without any modifications on the different drones under different payload and conditions.

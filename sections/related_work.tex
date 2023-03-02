@@ -11,26 +11,25 @@
 
 % \todo{Second of introduction should be incorporated into this section, but otherwise the writing is clear.}
 
-The design of high-performance adaptive controllers for aerospace systems has been a top priority for researchers and industry for more than 50 years.
+% The design of high-performance adaptive controllers for aerospace systems has been a top priority for researchers and industry for more than 50 years.
 % \todo{This isn't true, though? quadcopters may have been invented 100 years ago, but until we had small IMUs (maybe 20 years ago) no-one was really working on them, and certainly not a `top priority'.}
 % \todo{We can maybe claim something like automatic control of aerospace systems...}
 %
-While the overall goal remained the same over the decades, approaches greatly evolved.
+% While the overall goal remained the same over the decades, approaches greatly evolved.
 %
-In the following, we review both traditional and learning-based solutions to adaptive control.
+% While each method has its advantages and limitations, they are mainly designed to handle model uncertainties and disturbances.
 %
-While each method has its advantages and limitations, they are mainly designed to handle model uncertainties and disturbances.
-%
-We are interested in exploring a much wider range of adaptations, with substantial differences between platforms.
+% We are interested in exploring a much wider range of adaptations, with substantial differences between platforms.
 
 
 \subsection{Traditional Adaptive Control}
-
+The design of high-performance adaptive controllers for aerospace systems has been a top priority for researchers and industry for more than 50 years.
+%
 One of the initial contributions in this space is the model reference adaptive controller (MRAC), an extension of the well-known MIT-rule~\cite{MAREELSMit}.
 %
 The empirical success of this method sparked great interest in the aerospace community, which led to the development of both practical tools and theoretical foundations~\cite{aastrom2013adaptive, lavretsky2013robust}.
 %
-From the many methods developed, one of the most popular is $\mathcal{L}1$ adaptive control~\cite{cao2008design,hovakimyan2010l1}.
+From the many methods developed, one of the most popular is $\mathcal{L}_1$ adaptive control~\cite{cao2008design,hovakimyan2010l1}.
 %
 The main reason behind its success is the ability to provide rapid adaptation to model uncertainties and disturbances with theoretical guarantees under (possibly restrictive) assumptions.
 %
@@ -38,13 +37,13 @@ Its high-level working principle consists of estimating the differences between 
 %
 Such differences are then compensated by allocating a control authority proportional to the disturbance, effectively driving the system to its reference behaviour.
 %
-Applications of $\mathcal{L}1$ adaptive controllers span several types of aerial vehicles, from multi-rotors to fixed wings~\cite{mallikarjunan2012l1, gregory2009l1}.
+Applications of $\mathcal{L}_1$ adaptive controllers for aerial vehicles span from multi-rotors to fixed wings~\cite{mallikarjunan2012l1, gregory2009l1}.
 
-Mostly related to this work is the application of $\mathcal{L}1$ adaptive control to quadcopters~\cite{schreier2012modeling}.
+Mostly related to this work is the application of $\mathcal{L}_1$ adaptive control to quadcopters~\cite{schreier2012modeling}.
 %
-However, the performance of the classic $\mathcal{L}1$ formulation degrades whenever the observed transitions differ greatly from the (usually linear) reference model, which can happen due to aerodynamic effects or large payloads.
+However, the performance of the classic $\mathcal{L}_1$ formulation degrades whenever the observed transitions differ greatly from the (usually linear) reference model, which can happen due to aerodynamic effects or large payloads.
 %
-Therefore, recent work has combined $\mathcal{L}1$ adaptive control with nonlinear online optimization~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
+Therefore, recent work has combined $\mathcal{L}_1$ adaptive control with nonlinear online optimization~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
 %
 While these methods achieved impressive results, they still require explicit knowledge of (reference) system parameters, such as inertia, mass, and motor characteristics.
 %
@@ -59,9 +58,9 @@ However, they cannot cope with large variations in the quadcopter's dynamics, si
 
 
 %the engineer typically has to spend significant energy on estimating parameters, and tuning constants, to get the desired behaviour. 
-% In quadcopters, $\mathcal{L}1$ adaptive control is generally combined with online optimization, e.g. MPC, to obtain the best performances~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
+% In quadcopters, $\mathcal{L}_1$ adaptive control is generally combined with online optimization, e.g. MPC, to obtain the best performances~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
 %
-% Combining $\mathcal{L}1$ adaptive control with non-linear optimization can mitigate some of these problems and achieve impressive results in high-speed flight~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
+% Combining $\mathcal{L}_1$ adaptive control with non-linear optimization can mitigate some of these problems and achieve impressive results in high-speed flight~\cite{hanover2021performance, pravitra2020, pereida2018adaptive}.
 % %
 % However, they still require specific feature engineering and disturbances to be smaller in comparison to the quadcopter dynamics.
 % \todo{I don't understand the previous sentence -Mark}
